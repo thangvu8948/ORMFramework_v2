@@ -24,7 +24,7 @@ namespace UnitTest
             Console.WriteLine(b.Insert(item));
             var item1 = new { Email = "Doansang789@gmail.com" };
             var y = b.Update(x => x.ID == 1000, item);
-            var y = b.Update(x => x.ID == 1000 && x.Account_id == 1000, item);
+            var d = b.Update(x => x.ID == 1000 && x.Account_id == 1000, item);
             var z = b.Delete(x => x.ID == 1014);
             var g8 = b.OrderBy("ID", Order.DESC).Excute();
             var g = b.Where(x => x.Account_id == 1).OrderBy("ID", Order.DESC).Excute();

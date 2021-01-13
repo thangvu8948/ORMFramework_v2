@@ -50,5 +50,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ORMFramework\ORMFramework.csproj">
+      <Project>{9A392E8D-993E-40A6-8EA8-9B9DB4CA956A}</Project>
+      <Name>ORMFramework</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
