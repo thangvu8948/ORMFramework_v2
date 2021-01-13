@@ -24,7 +24,7 @@ namespace ORMFramework.Static
 */
         public static string insertSQL(string tableName, Dictionary<string, object> columnValueMappingForInsert)
         {
-            StringBuilder insertSQLBuilder = new StringBuilder();
+            MyStringBuilder insertSQLBuilder = new MyStringBuilder();
 
             /**
              * Removing column that holds NULL value or Blank value...
@@ -54,7 +54,7 @@ namespace ORMFramework.Static
                 }
             }
 
-            insertSQLBuilder = new StringBuilder(insertSQLBuilder.Remove(insertSQLBuilder.Length - 1, 1).ToString());
+            insertSQLBuilder = new MyStringBuilder(insertSQLBuilder.Remove(insertSQLBuilder.Length - 1, 1).ToString());
             insertSQLBuilder.Append(")");
             insertSQLBuilder.Append(" VALUES");
             insertSQLBuilder.Append("(");
@@ -68,7 +68,7 @@ namespace ORMFramework.Static
                 }
             }
 
-            insertSQLBuilder = new StringBuilder(insertSQLBuilder.Remove(insertSQLBuilder.Length - 1, 1).ToString());
+            insertSQLBuilder = new MyStringBuilder(insertSQLBuilder.Remove(insertSQLBuilder.Length - 1, 1).ToString());
             insertSQLBuilder.Append(")");
 
             // Returning the generated INSERT SQL Query as a String...
@@ -86,7 +86,7 @@ namespace ORMFramework.Static
         public static string updateSQL(string tableName, Dictionary<string,
         object> columnValueMappingForSet, Dictionary<string, object> columnValueMappingForCondition)
         {
-            StringBuilder updateQueryBuilder = new StringBuilder();
+            MyStringBuilder updateQueryBuilder = new MyStringBuilder();
 
             /**
              * Removing column that holds NULL value or Blank value...
@@ -131,7 +131,7 @@ namespace ORMFramework.Static
                 }
             }
 
-            updateQueryBuilder = new StringBuilder
+            updateQueryBuilder = new MyStringBuilder
                                   (updateQueryBuilder.Remove(updateQueryBuilder.Length - 1, 1).ToString());
             updateQueryBuilder.Append(" WHERE");
             updateQueryBuilder.Append(" ");
@@ -145,7 +145,7 @@ namespace ORMFramework.Static
                 }
             }
 
-            updateQueryBuilder = new StringBuilder
+            updateQueryBuilder = new MyStringBuilder
                                   (updateQueryBuilder.Remove(updateQueryBuilder.Length - 1, 1).ToString());
 
             // Returning the generated UPDATE SQL Query as a String...
@@ -156,7 +156,7 @@ namespace ORMFramework.Static
         {
             var temp = condtion.Split('=');
             columnValueMappingForSet.Remove($"{temp[0]}");
-            StringBuilder updateQueryBuilder = new StringBuilder();
+            MyStringBuilder updateQueryBuilder = new MyStringBuilder();
 
             /**
              * Removing column that holds NULL value or Blank value...
@@ -188,7 +188,7 @@ namespace ORMFramework.Static
                 }
             }
 
-            updateQueryBuilder = new StringBuilder
+            updateQueryBuilder = new MyStringBuilder
                                   (updateQueryBuilder.Remove(updateQueryBuilder.Length - 1, 1).ToString());
             updateQueryBuilder.Append(" WHERE");
             updateQueryBuilder.Append(" ");
@@ -216,7 +216,7 @@ namespace ORMFramework.Static
         public static string deleteSQL(string tableName, Dictionary<string,
         object> columnValueMappingForCondition)
         {
-            StringBuilder deleteSQLBuilder = new StringBuilder();
+            MyStringBuilder deleteSQLBuilder = new MyStringBuilder();
 
             /**
              * Removing column that holds NULL value or Blank value...
@@ -247,14 +247,14 @@ namespace ORMFramework.Static
                 }
             }
 
-            deleteSQLBuilder = new StringBuilder(deleteSQLBuilder.Remove(deleteSQLBuilder.Length - 5, 5).ToString());
+            deleteSQLBuilder = new MyStringBuilder(deleteSQLBuilder.Remove(deleteSQLBuilder.Length - 5, 5).ToString());
 
             // Returning the generated DELETE SQL Query as a String...
             return deleteSQLBuilder.ToString();
         }
         public static string deleteSQL(string tableName, string condtion)
         {
-            StringBuilder deleteSQLBuilder = new StringBuilder();
+            MyStringBuilder deleteSQLBuilder = new MyStringBuilder();
 
 
             /* Making the DELETE Query */
