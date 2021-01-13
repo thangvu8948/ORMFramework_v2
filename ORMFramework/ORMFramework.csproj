@@ -118,6 +118,8 @@
     <Compile Include="Enum\Order.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Static\Helpers.cs" />
+    <Compile Include="Static\IMyStringBuilder.cs" />
+    <Compile Include="Static\MyStringBuilder.cs" />
     <Compile Include="Static\SqlQuery.cs" />
     <Compile Include="SupportedAccess\MsSqlDataAccess.cs" />
     <Compile Include="SupportedAccess\MySqlDataAccess.cs" />
