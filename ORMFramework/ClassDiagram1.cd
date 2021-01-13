@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ORMFramework.Class1" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Class1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ORMFramework.Community.DatabaseHandlerFactory" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAUAAAAAAAAAACAAAAAAAA=</HashCode>
+      <FileName>Community\DatabaseHandlerFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ORMFramework.Community.DataParameterManager" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAEAAAAAAAAAAAAAAAAAgAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Community\DataParameterManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ORMFramework.Community.DBManager" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gBQYAEAIACAAAABABAAAABAAAAEAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Community\DBManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ORMFramework.Core.DbContext" Collapsed="true">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAAAAAAEAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Core\DbContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ORMFramework.Core.DbSet&lt;TEntity&gt;" Collapsed="true">
+    <Position X="2.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIQAAECAAAAAAAhCAAAAQAAEAAEIAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Core\DbSet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ORMFramework.Static.Helpers" Collapsed="true">
+    <Position X="4" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABIACAgAIAAAIAAAACAAKBCAAAAQAAAIAAAEAAAAAAA=</HashCode>
+      <FileName>Static\Helpers.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ORMFramework.Static.SqlQuery" Collapsed="true">
+    <Position X="4" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAQAAAAAAAAAAAAAAAABAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Static\SqlQuery.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ORMFramework.SupportedAccess.MsSqlDataAccess" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAEAAAAEABAAAAAIAAAAACAAAAAAAAA=</HashCode>
+      <FileName>SupportedAccess\MsSqlDataAccess.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ORMFramework.SupportedAccess.MySqlDataAccess" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAEAAAAEABAAAAAIAAAAACAAAAAAAAA=</HashCode>
+      <FileName>SupportedAccess\MySqlDataAccess.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ORMFramework.SupportedAccess.PostgreSqlDataAccess" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="2.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAEAAAAEABAAAAAIAAAAACAAAAAAAAA=</HashCode>
+      <FileName>SupportedAccess\PostgreSqlDataAccess.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Interface Name="ORMFramework.Community.IDatabaseHandler" Collapsed="true">
+    <Position X="0.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAEAAAAEABAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Community\IDatabaseHandler.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="ORMFramework.Enum.Order" Collapsed="true">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAABAA=</HashCode>
+      <FileName>Enum\Order.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
