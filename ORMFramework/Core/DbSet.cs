@@ -73,8 +73,32 @@ namespace ORMFramework.Core
             return _dbManager.Query<TEntity>(clone, CommandType.Text);
 
         }
+        public bool CanJoin<JT>() where JT : class
+        {
+            var propertyNeedSetData = typeof(TEntity).GetProperties()
+                    .Where(x =>
+                    x.PropertyType.ToString().ToLower()
+                    .Contains(typeof(JT).Name.ToLower())
+                    &&
+                     x.PropertyType.FullName.Contains("IEnumerable`1[")
+                    ).FirstOrDefault();
+            return propertyNeedSetData == null ? false : true;
+        }
+        //public DataSet Build(DataTable table1, DataTable table2, DataRelation relation)
+        //{
+        //    var dataSet = new DataSet();
+        //    dataSet.Tables.Add(table1);
+        //    dataSet.Tables.Add(table2);
+        //    dataSet.Relations.Add(relation);
+        //    return dataSet;
+        //}
         public IList Join<JT>(Tuple<string, string> frontToEnd, bool? forced = false) where JT : class
         {
+            bool flg = this.CanJoin<JT>();
+            if (flg || forced.Value ==false)
+            {
+                return null;
+            }
             var tableCommand = string.Format(SqlQuery.selectSQL(table), "");
             var dataT = _dbManager.GetDataTable(tableCommand, CommandType.Text);
             string joinedTable = typeof(JT).Name;
@@ -86,52 +110,45 @@ namespace ORMFramework.Core
             dataJ.TableName = joinedTable;
             dataSet.Tables.Add(dataJ);
             string constraint = "";
-            bool flag = false; ;
-            try
+
+            if (flg)
             {
                 constraint = $"{table}_{joinedTable}";
                 dataSet.Relations.Add(new DataRelation(constraint,
                        dataT.Columns[frontToEnd.Item1],
                        dataJ.Columns[frontToEnd.Item2]));
             }
-            catch (Exception ex)
+            else
             {
-                if (forced.Value)
-                {
-                    constraint = $"{joinedTable}_{table}";
-                    dataSet.Relations.Add(new DataRelation(constraint,
-                           dataJ.Columns[frontToEnd.Item2],
-                           dataT.Columns[frontToEnd.Item1]));
-                    flag = true;
-                }
-                else
-                {
-                    throw ex;
-                }
-
+                constraint = $"{joinedTable}_{table}";
+                dataSet.Relations.Add(new DataRelation(constraint,
+                       dataJ.Columns[frontToEnd.Item2],
+                       dataT.Columns[frontToEnd.Item1]));
             }
 
-            var res = Helpers.CreateList(flag ? typeof(JT) : typeof(TEntity));
-            foreach (DataRow item in !flag ? dataT.Rows : dataJ.Rows)
+            var res = Helpers.CreateList(flg ? typeof(TEntity): typeof(JT));
+            foreach (DataRow item in flg ? dataT.Rows : dataJ.Rows)
             {
                 IEnumerable<DataRow> memberRows = item.GetChildRows(constraint);
                 var temp = new object();
-                var obj = Helpers.CreateList(!flag ? typeof(JT) : typeof(TEntity));
-                if (!flag)
+                var obj = Helpers.CreateList(flg ? typeof(JT) : typeof(TEntity));
+                if (flg)
                 {
                     temp = item.ToEntity<TEntity>();
                     foreach (var dr in memberRows)
                     {
                         obj.Add(dr.ToEntity<JT>());
                     }
-
                 }
-                temp = item.ToEntity<JT>();
-                foreach (var dr in memberRows)
+                else
                 {
-                    obj.Add(dr.ToEntity<TEntity>());
+                    temp = item.ToEntity<JT>();
+                    foreach (var dr in memberRows)
+                    {
+                        obj.Add(dr.ToEntity<TEntity>());
+                    }
                 }
-                var propertyNeedSetData = (!flag ? typeof(TEntity) : typeof(JT)).GetProperties()
+                var propertyNeedSetData = (flg ? typeof(TEntity) : typeof(JT)).GetProperties()
                     .Where(x => x.PropertyType.ToString().ToLower().Contains(constraint.Split('_')[1].ToLower())).FirstOrDefault();
                 propertyNeedSetData.SetValue(temp, obj);
                 res.Add(temp);

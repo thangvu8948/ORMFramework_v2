@@ -13,6 +13,9 @@ namespace UnitTest
         {
             var a = new Test("MySqlConnectionString");
             var b = a.Set<Staff>();
+            var t=b.CanJoin<Account>();
+            var p = a.Set<Account>();
+            var i = p.CanJoin<Staff>();
             var c = b.Join<Account>(Tuple.Create("Account_id", "ID"), true);
             var item = new Staff();
             item.Email = "Sangdoan956@gmail.com";
