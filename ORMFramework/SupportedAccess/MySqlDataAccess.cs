@@ -1,5 +1,5 @@
-﻿using _4_ORM.Community;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
+using ORMFramework.Community;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _4_ORM.SupportedAccess
+namespace ORMFramework.SupportedAccess
 {
     class MySqlDataAccess : IDatabaseHandler
     {
