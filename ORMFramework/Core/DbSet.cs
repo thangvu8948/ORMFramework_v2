@@ -1,4 +1,5 @@
 ﻿using ORMFramework.Community;
+using ORMFramework.Static;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace ORMFramework.Core
         public DbSet(DBManager dBManager)
         {
             _dbManager = dBManager;
-            //currentCommand = SqlQuery.selectSQL(table);
+            currentCommand = SqlQuery.selectSQL(table);
         }
     }
 }
