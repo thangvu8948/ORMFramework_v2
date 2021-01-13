@@ -32,7 +32,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -47,12 +46,11 @@
     <Compile Include="Community\DataParameterManager.cs" />
     <Compile Include="Community\DBManager.cs" />
     <Compile Include="Community\IDatabaseHandler.cs" />
-    <Compile Include="Core\DbContext.cs" />
-    <Compile Include="Core\DbSet.cs" />
     <Compile Include="Enum\Order.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Static\Helpers.cs" />
-    <Compile Include="Static\SqlQuery.cs" />
+    <Compile Include="SupportedAccess\MsSqlDataAccess.cs" />
+    <Compile Include="SupportedAccess\MySqlDataAccess.cs" />
+    <Compile Include="SupportedAccess\PostgreSqlDataAccess.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
