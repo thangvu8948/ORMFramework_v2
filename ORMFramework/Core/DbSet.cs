@@ -2,6 +2,7 @@
 using ORMFramework.Static;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,14 @@ namespace ORMFramework.Core
         {
             _dbManager = dBManager;
             currentCommand = SqlQuery.selectSQL(table);
+        }
+        public long Insert(object item)
+        {
+            long insertedId;
+            var sqlCommand = SqlQuery.insertSQL(table, item.ToDictionary());
+            sqlCommand += "; SELECT LAST_INSERT_ID();";
+            _dbManager.Insert(sqlCommand, CommandType.Text, out insertedId);
+            return insertedId;
         }
     }
 }
