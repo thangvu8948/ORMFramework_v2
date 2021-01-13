@@ -43,6 +43,9 @@ namespace ORMFramework.Static
             if (value is string)
             {
                 data += value;
+            } else
+            {
+                data += value.ToString();
             }
             return this;
         }
