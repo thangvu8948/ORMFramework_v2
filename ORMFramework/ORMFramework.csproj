@@ -113,6 +113,8 @@
     <Compile Include="Community\DataParameterManager.cs" />
     <Compile Include="Community\DBManager.cs" />
     <Compile Include="Community\IDatabaseHandler.cs" />
+    <Compile Include="Core\DbContext.cs" />
+    <Compile Include="Core\DbSet.cs" />
     <Compile Include="Enum\Order.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Static\Helpers.cs" />
