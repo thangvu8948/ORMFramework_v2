@@ -1,4 +1,5 @@
 ﻿using ORMFramework.Community;
+using ORMFramework.Enum;
 using ORMFramework.Static;
 using System;
 using System.Collections.Generic;
@@ -40,5 +41,37 @@ namespace ORMFramework.Core
             var sqlCommand = SqlQuery.deleteSQL(table, condition);
             return _dbManager.Delete(sqlCommand, CommandType.Text);
         }
+        public DbSet<TEntity> Where(Expression<Func<TEntity, bool>> expression)
+        {
+            var condition = Helpers.GetWhereClause<TEntity>(expression);
+            currentCommand += $" WHERE t.{condition} ";
+            return this;
+        }
+        public void GroupBy()
+        {
+
+        }
+        public void Having()
+        {
+
+        }
+        public DbSet<TEntity> OrderBy(string field, Order order = Order.ASC)
+        {
+            currentCommand += $" ORDER BY t.{field}  {order.ToString()} ";
+            return this;
+        }
+        public DbSet<TEntity> Top(int number)
+        {
+            currentCommand = string.Format(currentCommand, $" TOP {number} ");
+            return this;
+        }
+        public IEnumerable<TEntity> Excute()
+        {
+            var clone = string.Format(currentCommand, "");
+            currentCommand = SqlQuery.selectSQL(table);
+            return _dbManager.Query<TEntity>(clone, CommandType.Text);
+
+        }
+
     }
 }
