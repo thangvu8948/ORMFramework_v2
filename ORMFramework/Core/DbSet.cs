@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,6 +27,18 @@ namespace ORMFramework.Core
             sqlCommand += "; SELECT LAST_INSERT_ID();";
             _dbManager.Insert(sqlCommand, CommandType.Text, out insertedId);
             return insertedId;
+        }
+        public bool Update(Expression<Func<TEntity, bool>> expression, object item)
+        {
+            var condition = Helpers.GetWhereClause<TEntity>(expression);
+            var sqlCommand = SqlQuery.updateSQL(table, item.ToDictionary(), condition);
+            return _dbManager.Update(sqlCommand, CommandType.Text);
+        }
+        public bool Delete(Expression<Func<TEntity, bool>> expression)
+        {
+            var condition = Helpers.GetWhereClause<TEntity>(expression);
+            var sqlCommand = SqlQuery.deleteSQL(table, condition);
+            return _dbManager.Delete(sqlCommand, CommandType.Text);
         }
     }
 }

@@ -74,5 +74,204 @@ namespace ORMFramework.Static
             // Returning the generated INSERT SQL Query as a String...
             return insertSQLBuilder.ToString();
         }
+       /** <h1>Get UPDATE SQL Query</h1>
+ * <p>It is a generic function.It can be use for any DB Table</p>
+ *
+ * @author Debopam Pal, Software Developer, NIC, India.
+ * @param tableName Table on which the UPDATE Operation will be performed.
+ * @param columnValueMappingForSet List of Column & Value pair to Update.
+ * @param columnValueMappingForCondition List of Column & Value pair for WHERE clause.
+ * @return Final generated UPDATE SQL Statement.
+ */
+        public static string updateSQL(string tableName, Dictionary<string,
+        object> columnValueMappingForSet, Dictionary<string, object> columnValueMappingForCondition)
+        {
+            StringBuilder updateQueryBuilder = new StringBuilder();
+
+            /**
+             * Removing column that holds NULL value or Blank value...
+             */
+            if (columnValueMappingForSet.Count != 0)
+            {
+                foreach (var entry in columnValueMappingForSet)
+                {
+                    if (entry.Value == null || entry.Value.Equals(""))
+                    {
+                        columnValueMappingForSet.Remove(entry.Key);
+                    }
+                }
+            }
+
+            /**
+             * Removing column that holds NULL value or Blank value...
+             */
+            if (columnValueMappingForCondition.Count != 0)
+            {
+                foreach (var entry in columnValueMappingForCondition)
+                {
+                    if (entry.Value == null || entry.Value.Equals(""))
+                    {
+                        columnValueMappingForCondition.Remove(entry.Key);
+                    }
+                }
+            }
+
+            /* Making the UPDATE Query */
+            updateQueryBuilder.Append("UPDATE");
+            updateQueryBuilder.Append(" ").Append(tableName);
+            updateQueryBuilder.Append(" SET");
+            updateQueryBuilder.Append(" ");
+
+            if (columnValueMappingForSet.Count != 0)
+            {
+                foreach (var entry in columnValueMappingForSet)
+                {
+                    updateQueryBuilder.Append(entry.Key).Append("=").Append(Helpers.format(entry.Value));
+                    updateQueryBuilder.Append(",");
+                }
+            }
+
+            updateQueryBuilder = new StringBuilder
+                                  (updateQueryBuilder.Remove(updateQueryBuilder.Length - 1, 1).ToString());
+            updateQueryBuilder.Append(" WHERE");
+            updateQueryBuilder.Append(" ");
+
+            if (columnValueMappingForCondition.Count != 0)
+            {
+                foreach (var entry in columnValueMappingForCondition)
+                {
+                    updateQueryBuilder.Append(entry.Key).Append("=").Append(entry.Value);
+                    updateQueryBuilder.Append(",");
+                }
+            }
+
+            updateQueryBuilder = new StringBuilder
+                                  (updateQueryBuilder.Remove(updateQueryBuilder.Length - 1, 1).ToString());
+
+            // Returning the generated UPDATE SQL Query as a String...
+            return updateQueryBuilder.ToString();
+        }
+        public static string updateSQL(string tableName, Dictionary<string,
+       object> columnValueMappingForSet, string condtion)
+        {
+            var temp = condtion.Split('=');
+            columnValueMappingForSet.Remove($"{temp[0]}");
+            StringBuilder updateQueryBuilder = new StringBuilder();
+
+            /**
+             * Removing column that holds NULL value or Blank value...
+             */
+            if (columnValueMappingForSet.Count != 0)
+            {
+                foreach (var entry in columnValueMappingForSet)
+                {
+                    if (entry.Value == null || entry.Value.Equals(""))
+                    {
+                        columnValueMappingForSet.Remove(entry.Key);
+                    }
+                }
+            }
+
+
+            /* Making the UPDATE Query */
+            updateQueryBuilder.Append("UPDATE");
+            updateQueryBuilder.Append(" ").Append(tableName);
+            updateQueryBuilder.Append(" SET");
+            updateQueryBuilder.Append(" ");
+
+            if (columnValueMappingForSet.Count != 0)
+            {
+                foreach (var entry in columnValueMappingForSet)
+                {
+                    updateQueryBuilder.Append(entry.Key).Append("=").Append(Helpers.format(entry.Value));
+                    updateQueryBuilder.Append(",");
+                }
+            }
+
+            updateQueryBuilder = new StringBuilder
+                                  (updateQueryBuilder.Remove(updateQueryBuilder.Length - 1, 1).ToString());
+            updateQueryBuilder.Append(" WHERE");
+            updateQueryBuilder.Append(" ");
+
+            if (!String.IsNullOrEmpty(condtion))
+            {
+                updateQueryBuilder.Append(condtion);
+            }
+
+            //updateQueryBuilder = new StringBuilder
+            //                      (updateQueryBuilder.Remove(updateQueryBuilder.Length - 1, 1).ToString());
+
+            // Returning the generated UPDATE SQL Query as a String...
+            return updateQueryBuilder.ToString();
+        }
+        /**
+ * <h1>Get DELETE SQL Query</h1>
+ * <p>It is a generic function. It can be use for any DB Table.</p>
+ *
+ * @author Debopam Pal, Software Developer, NIC, India.
+ * @param tableName Table on which the DELETE Operation will be performed.
+ * @param columnValueMappingForCondition List of Column & Value pair for WHERE clause.
+ * @return Final generated DELETE SQL Statement.
+ */
+        public static string deleteSQL(string tableName, Dictionary<string,
+        object> columnValueMappingForCondition)
+        {
+            StringBuilder deleteSQLBuilder = new StringBuilder();
+
+            /**
+             * Removing column that holds NULL value or Blank value...
+             */
+            if (columnValueMappingForCondition.Count != 0)
+            {
+                foreach (var entry in columnValueMappingForCondition)
+                {
+                    if (entry.Value == null || entry.Value.Equals(""))
+                    {
+                        columnValueMappingForCondition.Remove(entry.Key);
+                    }
+                }
+            }
+
+            /* Making the DELETE Query */
+            deleteSQLBuilder.Append("DELETE FROM");
+            deleteSQLBuilder.Append(" ").Append(tableName);
+            deleteSQLBuilder.Append(" WHERE");
+            deleteSQLBuilder.Append(" ");
+
+            if (columnValueMappingForCondition.Count != 0)
+            {
+                foreach (var entry in columnValueMappingForCondition)
+                {
+                    deleteSQLBuilder.Append(entry.Key).Append("=").Append(entry.Value);
+                    deleteSQLBuilder.Append(" AND ");
+                }
+            }
+
+            deleteSQLBuilder = new StringBuilder(deleteSQLBuilder.Remove(deleteSQLBuilder.Length - 5, 5).ToString());
+
+            // Returning the generated DELETE SQL Query as a String...
+            return deleteSQLBuilder.ToString();
+        }
+        public static string deleteSQL(string tableName, string condtion)
+        {
+            StringBuilder deleteSQLBuilder = new StringBuilder();
+
+
+            /* Making the DELETE Query */
+            deleteSQLBuilder.Append("DELETE FROM");
+            deleteSQLBuilder.Append(" ").Append(tableName);
+            deleteSQLBuilder.Append(" WHERE");
+            deleteSQLBuilder.Append(" ");
+
+            if (!String.IsNullOrEmpty(condtion))
+            {
+                deleteSQLBuilder.Append(condtion);
+            }
+
+            //deleteSQLBuilder = new StringBuilder(deleteSQLBuilder.Remove(deleteSQLBuilder.Length - 5, 5).ToString());
+
+            // Returning the generated DELETE SQL Query as a String...
+            return deleteSQLBuilder.ToString();
+        }
     }
 }
