@@ -46,6 +46,7 @@
     <Compile Include="Community\DataParameterManager.cs" />
     <Compile Include="Community\DBManager.cs" />
     <Compile Include="Community\IDatabaseHandler.cs" />
+    <Compile Include="Enum\Order.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
