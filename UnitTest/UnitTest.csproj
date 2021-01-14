@@ -34,6 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -44,6 +45,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ManualTest.cs" />
+    <Compile Include="Models\Account.cs" />
+    <Compile Include="Models\Api.cs" />
+    <Compile Include="Models\Booking.cs" />
+    <Compile Include="Models\BookingDetails.cs" />
+    <Compile Include="Models\BookingStatus.cs" />
+    <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\CustomerType.cs" />
+    <Compile Include="Models\Role.cs" />
+    <Compile Include="Models\Room.cs" />
+    <Compile Include="Models\RoomState.cs" />
+    <Compile Include="Models\RoomStatus.cs" />
+    <Compile Include="Models\RoomType.cs" />
+    <Compile Include="Models\Service.cs" />
+    <Compile Include="Models\ServiceDetails.cs" />
+    <Compile Include="Models\Staff.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -56,5 +72,6 @@
       <Name>ORMFramework</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
