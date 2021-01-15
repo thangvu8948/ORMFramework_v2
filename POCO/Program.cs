@@ -11,11 +11,17 @@ namespace POCO
     {
         static void Main(string[] args)
         {
-            //string[] agruments = { "-dbtype:mysql", "-conn_string:server=127.0.0.1;port=3306;user id=root; database=hotel", "-include_relationships:true", "-namespace:POCO", "-models_location:E:\\OneDrive - VNU-HCMUS\\FIT-HCMUS\\FIT-NAM4\\3.MẪU THIẾT KẾ HĐT\\DoAn\\ORM\\POCO\\HOTEL\\" };
-            //string[] agruments = { "-dbtype:mssql", "-conn_string:Data Source =.; Initial Catalog = QLKHACHSAN; Persist Security Info = True; User ID = sa; Password = ", "-include_relationships:true", "-namespace:POCO", "-models_location:E:\\OneDrive - VNU-HCMUS\\FIT-HCMUS\\FIT-NAM4\\3.MẪU THIẾT KẾ HĐT\\DoAn\\ORM\\POCO\\QLKHACHSAN\\" };
-            //string[] agruments = { "" };
+            //MY SQL CONNECTION STRING
+            //string[] agruments = { "-dbtype:mysql", "-conn_string:server=127.0.0.1;port=3306;user id=root; database=hotel", "-include_relationships:true", "-namespace:POCO", "-models_location:E:\\OneDrive - VNU-HCMUS\\FIT-HCMUS\\FIT-NAM4\\3.MẪU THIẾT KẾ HĐT\\DoAn\\ORM - Copy\\POCO\\HOTEL\\" };
+
+            //MICROSOFT SQL SERVER CONNECTION STRING
+            //string[] agruments = { "-dbtype:mssql", "-conn_string:Data Source =.; Initial Catalog = QLKHACHSAN; Persist Security Info = True; User ID = sa; Password = ", "-include_relationships:true", "-namespace:POCO", "-models_location:E:\\OneDrive - VNU-HCMUS\\FIT-HCMUS\\FIT-NAM4\\3.MẪU THIẾT KẾ HĐT\\DoAn\\ORM - Copy\\POCO\\QLKHACHSAN\\" };
+
+            //POSTGRES CONNECTION STRING
+            string[] agruments = { "-dbtype:postgres", "-conn_string:Server =127.0.0.1;Port=5432;Database=QLKhachSan;User Id=postgres;Password=root;", "-include_relationships:true", "-namespace:POCO", "-models_location:E:\\OneDrive - VNU-HCMUS\\FIT-HCMUS\\FIT-NAM4\\3.MẪU THIẾT KẾ HĐT\\DoAn\\ORM\\POCO\\MODEL-POSTGRES\\" };
+
             var readerParameters = new ReaderParameters();
-            var result = readerParameters.ParseArguments(args);//result là kết quả parse các tham số,  thành công sẽ lưu các tham số vào readerParameters
+            var result = readerParameters.ParseArguments(agruments);//result là kết quả parse các tham số,  thành công sẽ lưu các tham số vào readerParameters
 
             switch (result)
             {
