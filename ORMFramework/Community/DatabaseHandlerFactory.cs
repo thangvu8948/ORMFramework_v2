@@ -43,5 +43,19 @@ namespace ORMFramework.Community
         {
             return connectionStringSettings.ProviderName;
         }
+        public string GetJustInsertedID()
+        {
+            switch (connectionStringSettings.ProviderName.ToLower())
+            {
+                case "system.data.sqlclient":
+                    return "SCOPE_IDENTITY()";
+                case "mysql.data.mysqlclient":
+                    return "LAST_INSERT_ID()";
+                case "npgsql":
+                    return "lastval()";
+                default:
+                    return "";
+            }
+        }
     }
 }

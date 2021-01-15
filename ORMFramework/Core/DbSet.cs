@@ -26,7 +26,7 @@ namespace ORMFramework.Core
         {
             long insertedId;
             var sqlCommand = SqlQuery.insertSQL(table, item.ToDictionary());
-            sqlCommand += "; SELECT LAST_INSERT_ID();";
+            sqlCommand += $"; SELECT {_dbManager.GetJustInsertedID()};";
             _dbManager.Insert(sqlCommand, CommandType.Text, out insertedId);
             return insertedId;
         }
@@ -95,7 +95,7 @@ namespace ORMFramework.Core
         public IList Join<JT>(Tuple<string, string> frontToEnd, bool? forced = false) where JT : class
         {
             bool flg = this.CanJoin<JT>();
-            if (flg || forced.Value ==false)
+            if (!(flg || forced.Value == false))
             {
                 return null;
             }
@@ -126,7 +126,7 @@ namespace ORMFramework.Core
                        dataT.Columns[frontToEnd.Item1]));
             }
 
-            var res = Helpers.CreateList(flg ? typeof(TEntity): typeof(JT));
+            var res = Helpers.CreateList(flg ? typeof(TEntity) : typeof(JT));
             foreach (DataRow item in flg ? dataT.Rows : dataJ.Rows)
             {
                 IEnumerable<DataRow> memberRows = item.GetChildRows(constraint);

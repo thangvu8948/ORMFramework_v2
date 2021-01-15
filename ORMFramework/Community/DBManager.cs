@@ -20,7 +20,10 @@ namespace ORMFramework.Community
             database = dbFactory.CreateDatabase();
             providerName = dbFactory.GetProviderName();
         }
-
+        public string GetJustInsertedID()
+        {
+            return dbFactory.GetJustInsertedID();
+        }
         public IDbConnection GetDatabasecOnnection()
         {
             return database.CreateConnection();
@@ -130,7 +133,7 @@ namespace ORMFramework.Community
                             command.Parameters.Add(parameter);
                         }
                     }
-                   return Helpers.DataReaderMapToList<T>(command.ExecuteReader());
+                    return Helpers.DataReaderMapToList<T>(command.ExecuteReader());
                 }
             }
         }
@@ -150,7 +153,7 @@ namespace ORMFramework.Community
                         }
                     }
 
-                    int affected=command.ExecuteNonQuery();
+                    int affected = command.ExecuteNonQuery();
                     if (affected >= 1) return true;
                 }
             }
@@ -203,7 +206,7 @@ namespace ORMFramework.Community
         //    return lastId;
         //}
 
-        public long Insert(string commandText, CommandType commandType,  out long lastId,IDbDataParameter[] parameters=null)
+        public long Insert(string commandText, CommandType commandType, out long lastId, IDbDataParameter[] parameters = null)
         {
             lastId = 0;
             using (var connection = database.CreateConnection())
@@ -220,7 +223,16 @@ namespace ORMFramework.Community
                         }
                     }
                     object newId = command.ExecuteScalar();
-                    lastId = Convert.ToInt64(newId);
+                    try
+                    {
+                        lastId = Convert.ToInt64(newId);
+                    }
+                    catch (Exception)
+                    {
+
+                        lastId = 0;
+                    }
+
                 }
             }
 
@@ -297,7 +309,7 @@ namespace ORMFramework.Community
         //    }
         //}
 
-        public bool Update(string commandText, CommandType commandType, IDbDataParameter[] parameters=null)
+        public bool Update(string commandText, CommandType commandType, IDbDataParameter[] parameters = null)
         {
             using (var connection = database.CreateConnection())
             {

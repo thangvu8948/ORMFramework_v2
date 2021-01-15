@@ -88,7 +88,7 @@ namespace ORMFramework.Static
         // format string for SQL
         public static object format(object value)
         {
-            if (value is string)
+            if (value is string || value is bool || value is DateTime)
             {
                 return $"'{value}'";
             }
@@ -130,7 +130,7 @@ namespace ORMFramework.Static
             if (right is ConstantExpression)
             {
                 var rightConst = right as ConstantExpression;
-                value = string.Format(value, rightConst.Value);
+                value = string.Format(value, format(rightConst.Value));
             }
             if (right is MemberExpression)
             {
@@ -139,13 +139,13 @@ namespace ORMFramework.Static
                 var member = rightMem.Member.DeclaringType;
                 var type = rightMem.Member.MemberType;
                 var val = member.GetField(rightMem.Member.Name).GetValue(rightConst.Value);
-                value = string.Format(value, val);
+                value = string.Format(value, format(val));
             }
             if (value == "")
             {
                 var leftVal = GetValueAsString(left);
                 var rigthVal = GetValueAsString(right);
-                value = string.Format("{0} {1} {2}", leftVal, equalty, rigthVal);
+                value = string.Format("{0} {1} {2}", leftVal, equalty, format(rigthVal));
             }
             return value;
         }
