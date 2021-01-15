@@ -23,15 +23,15 @@ namespace POCO.Readers
         /// </summary>
         private NpgsqlConnection _connection;
 
-        /// <summary>
-        /// Reads the Schema returning all tables in the databse.
-        /// </summary>
-        public override Tables ReadSchema(string connectionString)
+        protected override void CreateConnection(string connectionString)
         {
             _connection = new NpgsqlConnection(connectionString);
-            var result = new Tables();
             _connection.Open();
+        }
 
+        protected override Tables ReadTablesStructural()
+        {
+            var result = new Tables();//tất cả các tablelaayf đucợ
             using (var sqlCommand = new NpgsqlCommand(TableSql, _connection))
             {
                 using (var reader = sqlCommand.ExecuteReader())
@@ -48,59 +48,27 @@ namespace POCO.Readers
                     }
                 }
             }
-
-            foreach (var tbl in result)
-            {
-                tbl.Columns = LoadColumns(tbl);
-
-                // Mark the primary key
-                string PrimaryKey = GetPk(tbl.Name);
-                var pkColumn = tbl.Columns.SingleOrDefault(x => x.Name.ToLower().Trim() == PrimaryKey.ToLower().Trim());
-                if (pkColumn != null)
-                    pkColumn.IsPk = true;
-            }
-
-            LoadReferencesKeysInfo(result);
             return result;
         }
 
-        /// <summary>
-        /// Loads the columns for the specidied table.
-        /// </summary>
-        protected override List<Column> LoadColumns(Table tbl)
+
+        protected override void ReadColumnsInTables(Tables result)
         {
-
-            using (var sqlCommand = new NpgsqlCommand(ColumnSql, _connection))
+            //loop again - but this time pull by table name
+            foreach (var item in result)
             {
-                var parameter = sqlCommand.CreateParameter();
-                parameter.ParameterName = "@tableName";
-                parameter.Value = tbl.Name;
-                sqlCommand.Parameters.Add(parameter);
+                item.Columns = LoadColumns(item);
 
-                var result = new List<Column>();
+                // Mark the primary key
+                MarkPrimaryKey(item);
 
-                using (var reader = sqlCommand.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        Column col = new Column();
-                        col.Name = reader["column_name"].ToString();
-                        col.PropertyName = Utils.CleanUp(col.Name);
-                        col.PropertyType = GetPropertyType(reader["udt_name"].ToString());
-                        col.IsNullable = reader["is_nullable"].ToString() == "YES";
-                        col.IsAutoIncrement = reader["column_default"].ToString().StartsWith("nextval(");
-                        result.Add(col);
-                    }
-
-                    return result;
-                }
             }
         }
 
         /// <summary>
         /// Loads the reference keys info for the entire database.
         /// </summary>
-        private void LoadReferencesKeysInfo(Tables tables)
+        protected override void LoadReferencesKeysInfo(Tables tables)
         {
             var innerKeysDic = new Dictionary<string, List<Key>>();
             foreach (var item in tables)
@@ -163,6 +131,67 @@ namespace POCO.Readers
                 }
             }
         }
+
+        /// <summary>
+        /// Reads the Schema returning all tables in the databse.
+        /// </summary>
+        //public override Tables ReadSchema(string connectionString)
+        //{
+        //    CreateConnection(connectionString);
+
+        //    var result = ReadTablesStructural();
+
+        //    ReadColumnsInTables(result);
+
+        //    ////khóa ngoại
+        //    LoadReferencesKeysInfo(result);//Convert khóa ngoại
+
+        //    return result;
+        //}
+
+        protected void MarkPrimaryKey(Table tbl)
+        {
+            // Mark the primary key
+            string PrimaryKey = GetPk(tbl.Name);
+            var pkColumn = tbl.Columns.SingleOrDefault(x => x.Name.ToLower().Trim() == PrimaryKey.ToLower().Trim());
+            if (pkColumn != null)
+                pkColumn.IsPk = true;
+        }
+
+        /// <summary>
+        /// Loads the columns for the specidied table.
+        /// </summary>
+        private List<Column> LoadColumns(Table tbl)
+        {
+
+            using (var sqlCommand = new NpgsqlCommand(ColumnSql, _connection))
+            {
+                var parameter = sqlCommand.CreateParameter();
+                parameter.ParameterName = "@tableName";
+                parameter.Value = tbl.Name;
+                sqlCommand.Parameters.Add(parameter);
+
+                var result = new List<Column>();
+
+                using (var reader = sqlCommand.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Column col = new Column();
+                        col.Name = reader["column_name"].ToString();
+                        col.PropertyName = Utils.CleanUp(col.Name);
+                        col.PropertyType = GetPropertyType(reader["udt_name"].ToString());
+                        col.IsNullable = reader["is_nullable"].ToString() == "YES";
+                        col.IsAutoIncrement = reader["column_default"].ToString().StartsWith("nextval(");
+                        result.Add(col);
+                    }
+
+                    return result;
+                }
+            }
+        }
+
+
 
         /// <summary>
         /// Gets the column primary key name from table specified.
@@ -258,26 +287,6 @@ namespace POCO.Readers
                 default:
                     return "string";
             }
-        }
-
-        protected override void CreateConnection(string connectionString)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void ReadColumnsInTables(Tables result)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void LoadReferencesKeysInfo(Tables tables)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override Tables ReadTablesStructural()
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>

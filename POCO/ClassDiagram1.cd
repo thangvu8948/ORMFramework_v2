@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="POCO.Readers.MySqlSchemaReader">
+    <Position X="4" Y="2.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAACQAAAAIAAAAAAAAAAAAAAAIAAAIAAAABAA=</HashCode>
+      <FileName>Readers\MySqlSchemaReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POCO.Readers.SchemaReader">
+    <Position X="4.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Readers\SchemaReader.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="POCO.Readers.SqlServerSchemaReader">
+    <Position X="1" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AACAAQAAACQACAAAAAAAAAAEAAAAQAAMABAIAAAABAA=</HashCode>
+      <FileName>Readers\SqlServerSchemaReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POCO.Readers.PostgreSqlSchemaReader">
+    <Position X="7.25" Y="1" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AACIAQAAACQAAAAIAAAAAAAAAAAAQAAIAAAIAAAABAA=</HashCode>
+      <FileName>Readers\PostgreSqlSchemaReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -24,79 +24,94 @@ namespace POCO.Readers
         /// </summary>
         private MySqlConnection _connection;
 
-        /// <summary>
-        /// Reads the Schema returning all tables in the databse.
-        /// </summary>
-        public override Tables ReadSchema(string connectionString)
+        protected override void CreateConnection(string connectionString)
         {
             _connection = new MySqlConnection(connectionString);
-            var result = new Tables();
-
             _connection.Open();
+        }
 
+        protected override Tables ReadTablesStructural()
+        {
+            var result = new Tables();//tất cả các tablelaayf đucợ
             using (var sqlCommand = new MySqlCommand(TableSql, _connection))
             {
                 using (var reader = sqlCommand.ExecuteReader())
                 {
                     while (reader.Read())
-                    {
+                    {//chuyển từ read 1 dòng trong SQL sang kiểu Table, trả về Tables
                         Table tbl = new Table();
                         tbl.Name = reader["TABLE_NAME"].ToString();
                         tbl.Schema = reader["TABLE_SCHEMA"].ToString();
-                        tbl.IsView = String.Compare(reader["TABLE_TYPE"].ToString(), "View", System.StringComparison.OrdinalIgnoreCase) == 0;
-                        tbl.CleanName = Utils.CleanName(tbl.Name);
+                        tbl.IsView = String.Compare(reader["TABLE_TYPE"].ToString(), "View", System.StringComparison.OrdinalIgnoreCase) == 0;//"BASE TABLE"
+                        tbl.CleanName = Utils.CleanName(tbl.Name);//Rút gọn tên của table
                         tbl.ClassName = Utils.CleanNameToClassName(tbl.CleanName);
                         result.Add(tbl);
                     }
                 }
             }
+            return result;
+        }
 
-            //this will return everything for the DB
-            var schema = _connection.GetSchema("COLUMNS");
-
+        protected override void ReadColumnsInTables(Tables result)
+        {
             //loop again - but this time pull by table name
             foreach (var item in result)
             {
-                item.Columns = new List<Column>();
+                item.Columns = LoadColumns(item);
 
-                //pull the columns from the schema
-                var columns = schema.Select("TABLE_NAME='" + item.Name + "'");
-                foreach (var row in columns)
-                {
-                    Column col = new Column();
-                    col.Name = row["COLUMN_NAME"].ToString();
-                    col.PropertyName = Utils.CleanUp(col.Name);
-                    col.PropertyType = GetPropertyType(row);
-                    col.IsNullable = row["IS_NULLABLE"].ToString() == "YES";
-                    col.IsPk = row["COLUMN_KEY"].ToString() == "PRI";
-                    col.IsAutoIncrement = row["extra"].ToString().ToLower().IndexOf("auto_increment", System.StringComparison.CurrentCultureIgnoreCase) >= 0;
-                    item.Columns.Add(col);
-                }
+                // Mark the primary key
+                MarkPrimaryKey(item);
 
-                // Only table with single primary key is allowed for this implementation
-                // number of columns that are valid primary keys
-                int pkeyCount = item.Columns.Count(x => x.IsPk);
-                if (pkeyCount > 1)
+                //item.OuterKeys = LoadOuterKeys(item);
+                //item.InnerKeys = LoadInnerKeys(item);
+
+            }
+        }
+
+        private List<Column> LoadColumns(Table item)
+        {
+            //this will return everything for the DB
+            var schema = _connection.GetSchema("COLUMNS");
+
+            item.Columns = new List<Column>();
+
+            //pull the columns from the schema
+            var columns = schema.Select("TABLE_NAME='" + item.Name + "'");
+            foreach (var row in columns)
+            {
+                Column col = new Column();
+                col.Name = row["COLUMN_NAME"].ToString();
+                col.PropertyName = Utils.CleanUp(col.Name);
+                col.PropertyType = GetPropertyType(row);
+                col.IsNullable = row["IS_NULLABLE"].ToString() == "YES";//true or false
+                col.IsPk = row["COLUMN_KEY"].ToString() == "PRI";//true false
+                col.IsAutoIncrement = row["extra"].ToString().ToLower().IndexOf("auto_increment", System.StringComparison.CurrentCultureIgnoreCase) >= 0;
+                item.Columns.Add(col);
+            }
+            return item.Columns;
+        }
+        protected void MarkPrimaryKey(Table item)
+        {
+            // Only table with single primary key is allowed for this implementation
+            // number of columns that are valid primary keys
+            int pkeyCount = item.Columns.Count(x => x.IsPk);//đếm có bn khóa 9
+            if (pkeyCount > 1)
+            {
+                foreach (var column in item.Columns)//mỗi bảng cho khóa = false
                 {
-                    foreach (var column in item.Columns)
-                    {
-                        column.IsPk = false;
-                    }
+                    column.IsPk = false;
                 }
             }
-
-            var referencesInfoDataTable = _connection.GetSchema("Foreign Key Columns");
-            LoadReferencesKeysInfo(result, referencesInfoDataTable);
-
-            return result;
         }
 
         /// <summary>
         /// Loads the reference keys info for the entire database.
         /// </summary>
-        private void LoadReferencesKeysInfo(Tables tables, DataTable dataTable)
+        protected override void LoadReferencesKeysInfo(Tables tables)
         {
-            var innerKeysDic = new Dictionary<string, List<Key>>();
+            var dataTable = _connection.GetSchema("Foreign Key Columns");
+
+            var innerKeysDic = new Dictionary<string, List<Key>>();//<Tên cột, danh sách các khóa mà nó tham chiếu đến
             foreach (var item in tables)
             {
                 item.OuterKeys = new List<Key>();
@@ -106,23 +121,23 @@ namespace POCO.Readers
                 var columns = dataTable.Select("TABLE_NAME='" + item.Name + "'");
                 foreach (DataRow row in columns)
                 {
-                    // Outer keys
+                    // Outer keys: Key relationship, outkey kiểm tra bảng đó tại thuộc tính này có tham chiếu đến ai không, lưu Reletionship đó và outer keys
                     var outerKey = new Key();
                     outerKey.Name = row["CONSTRAINT_NAME"].ToString();
-                    var referencedTable = row["REFERENCED_TABLE_NAME"].ToString();
+                    var referencedTable = row["REFERENCED_TABLE_NAME"].ToString();//hiện tại là column role-> khóa ngoại đến bảng role (ID)
                     outerKey.ReferencedTableName = referencedTable;
-                    outerKey.ReferencedTableColumnName = row["REFERENCED_COLUMN_NAME"].ToString();
-                    outerKey.ReferencingTableColumnName = row["COLUMN_NAME"].ToString();
-                    item.OuterKeys.Add(outerKey);
+                    outerKey.ReferencedTableColumnName = row["REFERENCED_COLUMN_NAME"].ToString();//ID
+                    outerKey.ReferencingTableColumnName = row["COLUMN_NAME"].ToString();//Account(Role)
+                    item.OuterKeys.Add(outerKey);//Cập nhật cột này tham chiếu ai vào thuộc tính OuterKeys
 
-                    var innerKey = new Key();
+                    var innerKey = new Key();//key được tham chiếu đến, thêm vào dictionary
                     innerKey.Name = row["CONSTRAINT_NAME"].ToString();
-                    innerKey.ReferencingTableName = row["TABLE_NAME"].ToString();
-                    innerKey.ReferencedTableColumnName = row["REFERENCED_COLUMN_NAME"].ToString();
+                    innerKey.ReferencingTableName = row["TABLE_NAME"].ToString();//Account , Referencing bảng tham chiếu bảng khác
+                    innerKey.ReferencedTableColumnName = row["REFERENCED_COLUMN_NAME"].ToString();//cột trong bảng được tham chiếu
                     innerKey.ReferencingTableColumnName = row["COLUMN_NAME"].ToString();
 
                     // add to inner keys references
-                    if (innerKeysDic.ContainsKey(referencedTable))
+                    if (innerKeysDic.ContainsKey(referencedTable))//nếu đã có trong dict, nghĩa là column này tham chiếu đến 1 bảng khác nữa, update lại
                     {
                         var innerKeys = innerKeysDic[referencedTable];
                         innerKeys.Add(innerKey);
@@ -137,7 +152,7 @@ namespace POCO.Readers
                 }
             }
 
-            // add inner references to tables
+            // add inner references to tables, với mỗi table, từ dictionary chứa tên bảng và các khóa của bảng khác mà nó trỏ tới,  lấy ds các khóa gán vào InnerKeys
             foreach (var item in tables)
             {
                 if (innerKeysDic.ContainsKey(item.Name))
@@ -147,6 +162,95 @@ namespace POCO.Readers
                 }
             }
         }
+
+        /// <summary>
+        /// Reads the Schema returning all tables in the databse.
+        /// </summary>
+        //public override Tables ReadSchema(string connectionString)
+        //{
+
+        //    CreateConnection(connectionString);
+
+        //    var result = ReadTablesStructural();
+
+        //    ReadColumnsInTables(result);
+
+        //    ////khóa ngoại
+        //    LoadReferencesKeysInfo(result);//Convert khóa ngoại
+
+        //    return result;
+        //}
+
+        //private List<Key> LoadOuterKeys(Table item)
+        //{
+        //    var dataTable = _connection.GetSchema("Foreign Key Columns");
+        //    List<Key> OuterKeys = new List<Key>();
+
+        //    //pull the foreign key details from the schema
+        //    var columns = dataTable.Select("TABLE_NAME='" + item.Name + "'");
+        //    foreach (DataRow row in columns)
+        //    {
+        //        // Outer keys: Key relationship, outkey kiểm tra bảng đó tại thuộc tính này có tham chiếu đến ai không, lưu Reletionship đó và outer keys
+        //        var outerKey = new Key();
+        //        outerKey.Name = row["CONSTRAINT_NAME"].ToString();
+        //        var referencedTable = row["REFERENCED_TABLE_NAME"].ToString();//hiện tại là column role-> khóa ngoại đến bảng role (ID)
+        //        outerKey.ReferencedTableName = referencedTable;
+        //        outerKey.ReferencedTableColumnName = row["REFERENCED_COLUMN_NAME"].ToString();//ID
+        //        outerKey.ReferencingTableColumnName = row["COLUMN_NAME"].ToString();//Account(Role)
+        //        OuterKeys.Add(outerKey);//Cập nhật cột này tham chiếu ai vào thuộc tính OuterKeys
+        //    }
+
+        //    return OuterKeys;
+        //}
+
+
+        //private List<Key> LoadInnerKeys(Table table)
+        //{
+        //    Tables tables = ReadTablesStructural();
+        //    var dataTable = _connection.GetSchema("Foreign Key Columns");
+        //    List<Key> InnerKeys = new List<Key>();
+
+        //    var innerKeysDic = new Dictionary<string, List<Key>>();//<Tên cột, danh sách các khóa mà nó tham chiếu đến
+        //    foreach (var item in tables)
+        //    {
+
+        //        //pull the foreign key details from the schema
+        //        var columns = dataTable.Select("TABLE_NAME='" + item.Name + "'");
+        //        foreach (DataRow row in columns)
+        //        {
+
+        //            var innerKey = new Key();//key được tham chiếu đến, thêm vào dictionary
+        //            innerKey.Name = row["CONSTRAINT_NAME"].ToString();
+        //            innerKey.ReferencingTableName = row["TABLE_NAME"].ToString();//Account , Referencing bảng tham chiếu bảng khác
+        //            innerKey.ReferencedTableColumnName = row["REFERENCED_COLUMN_NAME"].ToString();//cột trong bảng được tham chiếu
+        //            innerKey.ReferencingTableColumnName = row["COLUMN_NAME"].ToString();
+
+        //            var referencedTable = row["REFERENCED_TABLE_NAME"].ToString();
+        //            // add to inner keys references
+        //            if (innerKeysDic.ContainsKey(referencedTable))//nếu đã có trong dict, nghĩa là column này tham chiếu đến 1 bảng khác nữa, update lại
+        //            {
+        //                var innerKeys = innerKeysDic[referencedTable];
+        //                innerKeys.Add(innerKey);
+        //                innerKeysDic[referencedTable] = innerKeys;
+        //            }
+        //            else
+        //            {
+        //                var innerKeys = new List<Key>();
+        //                innerKeys.Add(innerKey);
+        //                innerKeysDic[referencedTable] = innerKeys;
+        //            }
+        //        }
+        //    }
+
+        //    // add inner references to tables, với mỗi table, từ dictionary chứa tên bảng và các khóa của bảng khác mà nó trỏ tới,  lấy ds các khóa gán vào InnerKeys
+        //    if (innerKeysDic.ContainsKey(table.Name))
+        //    {
+        //        InnerKeys = innerKeysDic[table.Name];
+        //    }
+        //    return InnerKeys;
+        //}
+
+
 
         /// <summary>
         /// Dispose resources.
@@ -171,7 +275,7 @@ namespace POCO.Readers
         /// <summary>
         /// Gets the property type from the column.
         /// </summary>
-        private string GetPropertyType(DataRow row)
+        private static string GetPropertyType(DataRow row)//convert kiểu DL bên SQL sang code
         {
             bool bUnsigned = row["COLUMN_TYPE"].ToString().IndexOf("unsigned", System.StringComparison.CurrentCultureIgnoreCase) >= 0;
             string propType = "string";
@@ -228,33 +332,8 @@ namespace POCO.Readers
             return propType;
         }
 
-        protected List<Column> LoadColumns(Table table)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void CreateConnection(string connectionString)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void ReadColumnsInTables(Tables result)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void LoadReferencesKeysInfo(Tables tables)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override Tables ReadTablesStructural()
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
-        /// Sql query to get table schema info.
+        /// Sql query to get table schema info, câu truy vấn gọi lên SQL thật để lấy ds bảng
         /// </summary>
         private const string TableSql = @"
 			SELECT * 

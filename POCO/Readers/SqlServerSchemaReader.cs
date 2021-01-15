@@ -23,15 +23,14 @@ namespace POCO.Readers
         /// </summary>
         private SqlConnection _connection;
 
-        /// <summary>
-        /// Reads the Schema returning all tables in the databse.
-        /// </summary>
-        public override Tables ReadSchema(string connectionString)
+        protected override void CreateConnection(string connectionString)
         {
             _connection = new SqlConnection(connectionString);
-            var result = new Tables();
             _connection.Open();
-
+        }
+        protected override Tables ReadTablesStructural()
+        {
+            var result = new Tables();
             using (var sqlCommand = new SqlCommand(TableSql, _connection))
             {
                 using (var reader = sqlCommand.ExecuteReader())
@@ -48,19 +47,26 @@ namespace POCO.Readers
                     }
                 }
             }
+            return result;
+        }
 
+        protected override void ReadColumnsInTables(Tables result)
+        {
             foreach (var tbl in result)
             {
+                //lấy được ds các columns của table
                 tbl.Columns = LoadColumns(tbl);
 
                 // Mark the primary key
-                string primaryKey = GetPk(tbl.Name);
-                var pkColumn = tbl.Columns.SingleOrDefault(x => x.Name.ToLower().Trim() == primaryKey.ToLower().Trim());
-                if (pkColumn != null)
-                {
-                    pkColumn.IsPk = true;
-                }
+                MarkPrimaryKey(tbl);
 
+                //lấy ràng buộc
+            }
+        }
+        protected override void LoadReferencesKeysInfo(Tables tables)
+        {
+            foreach (var tbl in tables)
+            {
                 try
                 {
                     tbl.OuterKeys = LoadOuterKeys(tbl);
@@ -71,8 +77,32 @@ namespace POCO.Readers
                     var error = x.Message.Replace("\r\n", "\n").Replace("\n", " ");
                 }
             }
+        }
+        ///// <summary>
+        ///// Reads the Schema returning all tables in the databse.
+        ///// </summary>
+        //public override Tables ReadSchema(string connectionString)
+        //{
+        //    CreateConnection(connectionString);
 
-            return result;
+        //    var result = ReadTablesStructural();
+
+        //    ReadColumnsInTables(result);
+
+        //    LoadReferencesKeysInfo(result);
+
+
+        //    return result;
+        //}
+
+        protected void MarkPrimaryKey(Table tbl)
+        {
+            string primaryKey = GetPk(tbl.Name);
+            var pkColumn = tbl.Columns.SingleOrDefault(x => x.Name.ToLower().Trim() == primaryKey.ToLower().Trim());
+            if (pkColumn != null)
+            {
+                pkColumn.IsPk = true;
+            }
         }
 
         /// <summary>
@@ -98,7 +128,7 @@ namespace POCO.Readers
         /// <summary>
         /// Loads the columns for the specidied table.
         /// </summary>
-        protected List<Column> LoadColumns(Table tbl)
+        private List<Column> LoadColumns(Table tbl)
         {
             using (var sqlCommand = new SqlCommand(ColumnSql, _connection))
             {
@@ -285,33 +315,12 @@ namespace POCO.Readers
             return sysType;
         }
 
-        protected override void CreateConnection(string connectionString)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void ReadColumnsInTables(Tables result)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void LoadReferencesKeysInfo(Tables tables)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override Tables ReadTablesStructural()
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Sql query to get table schema info.
         /// </summary>
         private const string TableSql = @"SELECT *
 		    FROM  INFORMATION_SCHEMA.TABLES
 		    WHERE TABLE_TYPE='BASE TABLE' OR TABLE_TYPE='VIEW'";
-
         /// <summary>
         /// Sql query to get table columns info.
         /// </summary>
