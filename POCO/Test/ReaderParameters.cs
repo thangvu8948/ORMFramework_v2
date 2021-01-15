@@ -25,7 +25,7 @@ namespace POCO.Test
         public bool IncludeRelationships { get; set; }
         public bool UseConnectionStringName { get; set; }
         public string CsprojLocation { get; set; }
-
+        public string ProjectLocation { get; set; }
         public string ErrorMessage { get; set; }
 
         public ReaderParameters()
@@ -45,13 +45,16 @@ namespace POCO.Test
                 builder.AppendLine("\t -conn_string:full connection string value");
                 builder.AppendLine("\t -include_relationships:true|false [Optional]");
                 builder.AppendLine("\t -namespace:namespace [Optional - deafult is database type + .Model]");
+                builder.AppendLine("\t-project_location:path to project location");
                 builder.AppendLine("\t -models_location:full folder path for model [Optional - default is current location with database type + .Model subdirectory name]");
+                builder.AppendLine("\t -csproj_location:path to csproj visual studio file to auto import cs file into project [Optional]");
                 builder.AppendLine("\nor\n");
                 builder.AppendLine("poco");
                 builder.AppendLine("\t -dbtype:database type [mssql, sqlite, mysql, postgres]");
                 builder.AppendLine("\t -conn_string_name:connection string name in app.config");
                 builder.AppendLine("\t -include_relationships:true|false [Optional]");
                 builder.AppendLine("\t -namespace:namespace [Optional - deafult is database type + .Model]");
+                builder.AppendLine("\t-project_location:path to project location");
                 builder.AppendLine("\t -models_location:full folder path for model [Optional - default is current location with database type + .Model subdirectory name]");
                 builder.AppendLine("\t -csproj_location:path to csproj visual studio file to auto import cs file into project [Optional]");
                 return builder.ToString();
@@ -123,6 +126,9 @@ namespace POCO.Test
                             break;
                         case Argument.CsprojLocationArgTag:
                             CsprojLocation = argument.Value;
+                            break;
+                        case Argument.ProjectLocationArgTag:
+                            ProjectLocation = argument.Value;
                             break;
                     }
 
