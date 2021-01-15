@@ -15,7 +15,7 @@ namespace POCO.Test
     /// <summary>
     /// This class represents ModelsGenerator class.
     /// </summary>
-    public class ModelsGenerator
+    public class ModelsGenerator//make cs file
     {
         public static void Generate(ReaderParameters readerParameters)
         {

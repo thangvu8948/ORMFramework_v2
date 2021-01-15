@@ -67,7 +67,7 @@ namespace POCO.Readers
         /// <summary>
         /// Loads the columns for the specidied table.
         /// </summary>
-        private List<Column> LoadColumns(Table tbl)
+        protected override List<Column> LoadColumns(Table tbl)
         {
 
             using (var sqlCommand = new NpgsqlCommand(ColumnSql, _connection))
@@ -258,6 +258,26 @@ namespace POCO.Readers
                 default:
                     return "string";
             }
+        }
+
+        protected override void CreateConnection(string connectionString)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void ReadColumnsInTables(Tables result)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void LoadReferencesKeysInfo(Tables tables)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Tables ReadTablesStructural()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

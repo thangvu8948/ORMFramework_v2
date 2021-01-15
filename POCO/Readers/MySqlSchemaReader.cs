@@ -171,7 +171,7 @@ namespace POCO.Readers
         /// <summary>
         /// Gets the property type from the column.
         /// </summary>
-        private static string GetPropertyType(DataRow row)
+        private string GetPropertyType(DataRow row)
         {
             bool bUnsigned = row["COLUMN_TYPE"].ToString().IndexOf("unsigned", System.StringComparison.CurrentCultureIgnoreCase) >= 0;
             string propType = "string";
@@ -226,6 +226,31 @@ namespace POCO.Readers
 
             }
             return propType;
+        }
+
+        protected List<Column> LoadColumns(Table table)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void CreateConnection(string connectionString)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void ReadColumnsInTables(Tables result)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void LoadReferencesKeysInfo(Tables tables)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Tables ReadTablesStructural()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
