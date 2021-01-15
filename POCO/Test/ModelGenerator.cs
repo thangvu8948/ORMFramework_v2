@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace POCO.Test
 {
+    using POCO.Models;
     using POCO.Readers;
     using POCO.Templates;
     using System;
@@ -24,7 +25,8 @@ namespace POCO.Test
                 var connectionString = readerParameters.ConnectionString;
                 if (readerParameters.UseConnectionStringName)
                 {
-                    connectionString = ConfigurationManager.ConnectionStrings[readerParameters.ConnectionStringName].ConnectionString;
+                    connectionString = Utils.getConnectionString(readerParameters.ProjectLocation, readerParameters.ConnectionStringName);
+                    //connectionString = ConfigurationManager.ConnectionStrings[readerParameters.ConnectionStringName].ConnectionString;
                 }
 
                 if (schemaReader == null || string.IsNullOrEmpty(connectionString))
