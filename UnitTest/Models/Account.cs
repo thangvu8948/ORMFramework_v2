@@ -27,7 +27,7 @@ namespace Models.POCO
 		public virtual DateTime CreatedAt { get; set; }
 		public virtual DateTime? DeletedAt { get; set; }
 		public virtual DateTime ModifiedAt { get; set; }
-		public virtual Role Role1 { get; set; }
+		public virtual Role Role { get; set; }
 		public virtual IEnumerable<Staff> Staffs { get; set; }
 	}
 }

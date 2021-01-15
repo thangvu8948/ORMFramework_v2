@@ -20,7 +20,7 @@ namespace Models.POCO
 	public partial class Api
 	{
 		[Key]
-		public virtual uint id { get; set; }
+		public virtual int id { get; set; }
 		public virtual string api_name { get; set; }
 		public virtual string api_key { get; set; }
 	}
