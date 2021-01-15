@@ -1,4 +1,4 @@
-﻿using Models.POCO;
+﻿//using Models.POCO;
 using ORMFramework.Enum;
 using System;
 using System.Collections.Generic;
@@ -35,19 +35,19 @@ namespace UnitTest
 
 
             ////****MS SQL
-            var a = new Test("SqlConnectionString");
-            var b = a.Set<LOAIDV>();
+            //var a = new Test("SqlConnectionString");
+            //var b = a.Set<LOAIDV>();
 
-            ////Insert
-            //var item = new LOAIDV();
-            //item.LoaiDVID = "N224442";
-            //item.TenLoai = "Chăm sóc";
-            //item.NgayTao = DateTime.Now;
-            //Console.WriteLine(b.Insert(item));
+            //////Insert
+            ////var item = new LOAIDV();
+            ////item.LoaiDVID = "N224442";
+            ////item.TenLoai = "Chăm sóc";
+            ////item.NgayTao = DateTime.Now;
+            ////Console.WriteLine(b.Insert(item));
 
-            ////JOIN
-            var t = b.CanJoin<DICHVU>();
-            var c = b.Join<DICHVU>(Tuple.Create("LoaiDVID", "LoaiDVID"), true);
+            //////JOIN
+            //var t = b.CanJoin<DICHVU>();
+            //var c = b.Join<DICHVU>(Tuple.Create("LoaiDVID", "LoaiDVID"), true);
 
             ////DELETE
             //var z = b.Delete(x => x.LoaiDVID == "N224442");

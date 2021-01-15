@@ -42,6 +42,12 @@ namespace POCO.Test
                 }
 
                 var tables = schemaReader.ReadSchema(connectionString);
+                var p = new Microsoft.Build.Evaluation.Project();
+                
+                if (!string.IsNullOrEmpty(readerParameters.CsprojLocation))
+                {
+                    p = new Microsoft.Build.Evaluation.Project(readerParameters.CsprojLocation); ;
+                }
 
                 foreach (var table in tables)
                 {
@@ -62,6 +68,23 @@ namespace POCO.Test
                     string fileName = table.ClassName + ".cs";
                     Console.WriteLine(string.Format("Creating file {0} ...", fileName));
                     File.WriteAllText(Path.Combine(readerParameters.ModelsLocation, fileName), pageContent);
+
+                    //Add file to project
+
+                    if (!string.IsNullOrWhiteSpace(readerParameters.CsprojLocation))
+                    {
+                        try
+                        {
+                            p.AddItem("Compile", Path.Combine(readerParameters.ModelsLocation, fileName));
+                            p.Save();
+                            Console.WriteLine("Auto Add file {0} success", fileName);
+
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Auto Add file failed");
+                        };
+                    }
                 }
             }
         }
