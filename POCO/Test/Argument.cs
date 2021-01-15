@@ -19,7 +19,7 @@ namespace POCO.Test
         public const string IncludeRelationshipsArgTag = "include_relationships";
         public const string NamespaceArgTag = "namespace";
         public const string ModelsLocationArgTag = "models_location";
-
+        public const string CsprojLocationArgTag  = "csproj_location";
         public string Name { get; set; }
         public string Value { get; set; }
 
@@ -53,6 +53,7 @@ namespace POCO.Test
                 case ConnStringNameArgTag:
                 case NamespaceArgTag:
                 case ModelsLocationArgTag:
+                case CsprojLocationArgTag:
                     return true;
                 case IncludeRelationshipsArgTag:
                     if (string.Compare("true", Value, StringComparison.CurrentCultureIgnoreCase) == 0 ||
