@@ -43,7 +43,14 @@ namespace POCO.Readers
         /// </summary>
         public virtual Tables ReadSchema(string connectionString)
         {
-            CreateConnection(connectionString);
+            try
+            {
+                CreateConnection(connectionString);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Can not connect to Database, check your connection string  !!!");
+            }
 
             var result = ReadTablesStructural();
 
