@@ -9,6 +9,7 @@ namespace POCO.Models
     using System;
     using System.Data.Entity.Design.PluralizationServices;
     using System.Globalization;
+    using System.IO;
     using System.Text.RegularExpressions;
     /// <summary>
     /// This class represents a schema reading utitlity class.
@@ -154,6 +155,35 @@ namespace POCO.Models
                 modName += name[ctr].ToString(CultureInfo.InvariantCulture);
             }
             return modName;
+        }
+
+        public static string getConnectionString(string projectLocation, string connectionName)
+        {
+            string[] lines = System.IO.File.ReadAllLines(Path.Combine(projectLocation, "App.config"));
+            string cntLine = "";
+            const string NameLabel = "name=\"";
+            const string CntStrLabel = "connectionString=\"";
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string line = lines[i];
+                int idxNameCfg = line.IndexOf("name=\"");
+                if (idxNameCfg > -1)
+                {
+                    string name = "";
+                    int endNameIdx = line.IndexOf("\"", idxNameCfg + NameLabel.Length);
+                    name = line.Substring(idxNameCfg + NameLabel.Length, endNameIdx - (idxNameCfg + NameLabel.Length));
+                    if (name == connectionName)
+                    {
+                        string cntstr = "";
+                        int startCntIdx = line.IndexOf("\"", endNameIdx + 1);
+                        int endCntIdx = line.IndexOf("\"", startCntIdx + CntStrLabel.Length);
+                        cntLine = line.Substring(startCntIdx + 1, endCntIdx - (startCntIdx + 1));
+                        return cntLine;
+                    }
+                }
+
+            }
+            return cntLine;
         }
     }
 }
