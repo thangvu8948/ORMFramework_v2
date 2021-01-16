@@ -17,9 +17,11 @@ namespace ORMFramework.Core
         string table = typeof(TEntity).Name;
         private DBManager _dbManager;
         string currentCommand = "";
+        int number_of_joinedTable;
         public DbSet(DBManager dBManager)
         {
             _dbManager = dBManager;
+            number_of_joinedTable = 0;
             currentCommand = SqlQuery.selectSQL(table);
         }
         public long Insert(object item)
@@ -48,24 +50,16 @@ namespace ORMFramework.Core
             currentCommand += $" WHERE t.{condition} ";
             return this;
         }
-        public void GroupBy()
-        {
-
-        }
-        public void Having()
-        {
-
-        }
         public DbSet<TEntity> OrderBy(string field, Order order = Order.ASC)
         {
             currentCommand += $" ORDER BY t.{field}  {order.ToString()} ";
             return this;
         }
-        public DbSet<TEntity> Top(int number)
-        {
-            currentCommand = string.Format(currentCommand, $" TOP {number} ");
-            return this;
-        }
+        //public DbSet<TEntity> Top(int number)
+        //{
+        //    currentCommand = string.Format(currentCommand, $" TOP {number} ");
+        //    return this;
+        //}
         public IEnumerable<TEntity> Excute()
         {
             var clone = string.Format(currentCommand, "");
@@ -157,5 +151,34 @@ namespace ORMFramework.Core
             return res;
         }
 
+        // is building
+        private DbSet<TEntity> Join(string tableName, Tuple<string, string> frontToEnd, JOINTYPE type)
+        {
+            var shortName = $"j{ ++number_of_joinedTable}";
+            currentCommand += $" {type} JOIN {tableName} {shortName} " +
+                $"ON t.{frontToEnd.Item1}={shortName}.{frontToEnd.Item2} ";
+            return this;
+        }
+        private DbSet<TEntity> Select(string statement)
+        {
+            var tbl = string.Format(currentCommand, $" {statement} ,"+" {0}");
+            return this;
+        }
+        private DbSet<TEntity> GroupBy(string statements)
+        {
+            currentCommand += $" GROUP BY {statements} ";
+            return this;
+        }
+        private DbSet<TEntity> Having(string statements)
+        {
+            currentCommand += $" HAVING {statements} ";
+            return this;
+        }
+        private IEnumerable<object> Run()
+        {
+            var clone = string.Format(currentCommand, "");
+            currentCommand = SqlQuery.selectSQL(table);
+            return _dbManager.GetDataTable(clone, CommandType.Text).AsEnumerable();
+        }
     }
 }

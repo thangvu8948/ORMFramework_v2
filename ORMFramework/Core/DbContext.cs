@@ -14,7 +14,7 @@ namespace ORMFramework.Core
         public DbContext(string _name)
         {
             name = _name;
-            dBManager = new DBManager(_name);
+            dBManager = DBManager.getInstance(_name);
         }
         public DbSet<TEntity> Set<TEntity>() where TEntity : class
         {

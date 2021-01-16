@@ -10,11 +10,20 @@ namespace ORMFramework.Community
 {
     public class DBManager
     {
+        private static DBManager instance;
         private DatabaseHandlerFactory dbFactory;
         private IDatabaseHandler database;
         private string providerName;
 
-        public DBManager(string connectionStringName)
+        public static DBManager getInstance(string connectionStringName)
+        {
+            if (instance == null)
+            {
+                instance = new DBManager(connectionStringName);
+            }
+            return instance;
+        }
+        private DBManager(string connectionStringName)
         {
             dbFactory = new DatabaseHandlerFactory(connectionStringName);
             database = dbFactory.CreateDatabase();

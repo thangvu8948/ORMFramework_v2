@@ -11,4 +11,11 @@ namespace ORMFramework.Enum
         ASC,
         DESC
     }
+    public enum JOINTYPE
+    {
+        INNER,
+        LEFT,
+        RIGHT,
+        OUTER
+    }
 }

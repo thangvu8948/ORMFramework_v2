@@ -139,13 +139,13 @@ namespace ORMFramework.Static
                 var member = rightMem.Member.DeclaringType;
                 var type = rightMem.Member.MemberType;
                 var val = member.GetField(rightMem.Member.Name).GetValue(rightConst.Value);
-                value = string.Format(value, format(val));
+                value = string.Format(value, val);
             }
             if (value == "")
             {
                 var leftVal = GetValueAsString(left);
                 var rigthVal = GetValueAsString(right);
-                value = string.Format("{0} {1} {2}", leftVal, equalty, format(rigthVal));
+                value = string.Format("{0} {1} {2}", leftVal, equalty, rigthVal);
             }
             return value;
         }
