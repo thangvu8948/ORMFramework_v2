@@ -44,22 +44,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="D:\Workspace\DP\ORMFramework\UnitTest\Models\Account.cs" />
-    <Compile Include="D:\Workspace\DP\ORMFramework\UnitTest\Models\Api.cs" />
-    <Compile Include="D:\Workspace\DP\ORMFramework\UnitTest\Models\Booking.cs" />
-    <Compile Include="D:\Workspace\DP\ORMFramework\UnitTest\Models\BookingDetails.cs" />
-    <Compile Include="D:\Workspace\DP\ORMFramework\UnitTest\Models\BookingStatus.cs" />
-    <Compile Include="D:\Workspace\DP\ORMFramework\UnitTest\Models\Customer.cs" />
-    <Compile Include="D:\Workspace\DP\ORMFramework\UnitTest\Models\CustomerType.cs" />
-    <Compile Include="D:\Workspace\DP\ORMFramework\UnitTest\Models\Role.cs" />
-    <Compile Include="D:\Workspace\DP\ORMFramework\UnitTest\Models\Room.cs" />
-    <Compile Include="D:\Workspace\DP\ORMFramework\UnitTest\Models\RoomState.cs" />
-    <Compile Include="D:\Workspace\DP\ORMFramework\UnitTest\Models\RoomStatus.cs" />
-    <Compile Include="D:\Workspace\DP\ORMFramework\UnitTest\Models\RoomType.cs" />
-    <Compile Include="D:\Workspace\DP\ORMFramework\UnitTest\Models\Service.cs" />
-    <Compile Include="D:\Workspace\DP\ORMFramework\UnitTest\Models\ServiceDetails.cs" />
-    <Compile Include="D:\Workspace\DP\ORMFramework\UnitTest\Models\Staff.cs" />
     <Compile Include="ManualTest.cs" />
+    <Compile Include="Models\Account.cs" />
+    <Compile Include="Models\Api.cs" />
+    <Compile Include="Models\Booking.cs" />
+    <Compile Include="Models\BookingDetails.cs" />
+    <Compile Include="Models\BookingStatus.cs" />
+    <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\CustomerType.cs" />
+    <Compile Include="Models\Role.cs" />
+    <Compile Include="Models\Room.cs" />
+    <Compile Include="Models\RoomState.cs" />
+    <Compile Include="Models\RoomStatus.cs" />
+    <Compile Include="Models\RoomType.cs" />
+    <Compile Include="Models\Service.cs" />
+    <Compile Include="Models\ServiceDetails.cs" />
+    <Compile Include="Models\Staff.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
