@@ -8,26 +8,26 @@
 
 namespace Models.POCO
 {
-	using System;
-	using System.ComponentModel.DataAnnotations;
-	using System.ComponentModel.DataAnnotations.Schema;
-	using System.Collections.Generic;
+    using System;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Collections.Generic;
 
     /// <summary>
     /// A class which represents the account table.
     /// </summary>
 	[Table("account")]
-	public partial class Account
-	{
-		[Key]
-		public virtual int ID { get; set; }
-		public virtual string UserName { get; set; }
-		public virtual string Password { get; set; }
-		public virtual int Role { get; set; }
-		public virtual DateTime CreatedAt { get; set; }
-		public virtual DateTime? DeletedAt { get; set; }
-		public virtual DateTime ModifiedAt { get; set; }
-		public virtual Role Role { get; set; }
-		public virtual IEnumerable<Staff> Staffs { get; set; }
-	}
+    public partial class Account
+    {
+        [Key]
+        public virtual int ID { get; set; }
+        public virtual string UserName { get; set; }
+        public virtual string Password { get; set; }
+        public virtual int Role { get; set; }
+        public virtual DateTime CreatedAt { get; set; }
+        public virtual DateTime? DeletedAt { get; set; }
+        public virtual DateTime ModifiedAt { get; set; }
+        public virtual Role Role1 { get; set; }
+        public virtual IEnumerable<Staff> Staffs { get; set; }
+    }
 }
