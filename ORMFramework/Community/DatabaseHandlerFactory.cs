@@ -52,7 +52,7 @@ namespace ORMFramework.Community
                 case "mysql.data.mysqlclient":
                     return "LAST_INSERT_ID()";
                 case "npgsql":
-                    return "lastval()";
+                    return "LASTVAL()";
                 default:
                     return "";
             }

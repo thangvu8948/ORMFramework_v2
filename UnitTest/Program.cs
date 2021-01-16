@@ -1,5 +1,6 @@
-﻿//using Models.POCO;
+﻿
 using ORMFramework.Enum;
+using POCO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,14 +39,14 @@ namespace UnitTest
             //var a = new Test("SqlConnectionString");
             //var b = a.Set<LOAIDV>();
 
-            //////Insert
-            ////var item = new LOAIDV();
-            ////item.LoaiDVID = "N224442";
-            ////item.TenLoai = "Chăm sóc";
-            ////item.NgayTao = DateTime.Now;
-            ////Console.WriteLine(b.Insert(item));
+            ////Insert
+            //var item = new LOAIDV();
+            //item.LoaiDVID = "N224442";
+            //item.TenLoai = "Chăm sóc";
+            //item.NgayTao = DateTime.Now;
+            //Console.WriteLine(b.Insert(item));
 
-            //////JOIN
+            ////JOIN
             //var t = b.CanJoin<DICHVU>();
             //var c = b.Join<DICHVU>(Tuple.Create("LoaiDVID", "LoaiDVID"), true);
 
@@ -53,14 +54,36 @@ namespace UnitTest
             //var z = b.Delete(x => x.LoaiDVID == "N224442");
 
             ////UPDATE
-            //var item1 = new { TenLoai = "Giặt ủi" };
+            //var item1 = new { TenLoai = "Loại Dịch vụ Giặt ủi" };
             //var y = b.Update(x => x.LoaiDVID == "GIAT", item1);
 
             ////ORDER
             //var d = a.Set<DICHVU>();
             //var g = d.Where(x => x.LoaiDVID == "GIAT").OrderBy("GiaBan", Order.DESC).Excute();
 
+            //POSTGRES
+            var aa = new Test("PostgreSqlQuyen");
+            var bb = aa.Set<Loaidichvu>();
 
+            ////Insert
+            //var item = new Loaidichvu();
+            //item.tenloai = "Chăm sóc";
+            //Console.WriteLine(bb.Insert(item));
+
+            ////JOIN
+            //var tt = bb.CanJoin<Dichvu>();
+            //var cc = bb.Join<Dichvu>(Tuple.Create("maloai", "maloai"), true);
+
+            ////DELETE
+            //var z = bb.Delete(x => x.maloai == 4);
+
+            ////UPDATE
+            //var item1 = new { tenloai = "do an ngon" };
+            //var y = bb.Update(x => x.maloai == 1, item1);
+
+            ////ORDER
+            var d = aa.Set<Dichvu>();
+            var g = d.Where(x => x.maloai == 1).OrderBy("gia", Order.DESC).Excute();
 
             Console.ReadKey();
 
