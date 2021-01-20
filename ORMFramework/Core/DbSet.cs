@@ -89,7 +89,7 @@ namespace ORMFramework.Core
         public IList Join<JT>(Tuple<string, string> frontToEnd, bool? forced = false) where JT : class
         {
             bool flg = this.CanJoin<JT>();
-            if (!(flg || forced.Value == false))
+            if (!(flg || forced.Value))
             {
                 return null;
             }
@@ -159,26 +159,31 @@ namespace ORMFramework.Core
                 $"ON t.{frontToEnd.Item1}={shortName}.{frontToEnd.Item2} ";
             return this;
         }
-        private DbSet<TEntity> Select(string statement)
+        public DbSet<TEntity> Select(string statement)
         {
-            var tbl = string.Format(currentCommand, $" {statement} ,"+" {0}");
+            currentCommand = removeStar(string.Format(currentCommand, $" {statement}" + " {0}"));
             return this;
         }
-        private DbSet<TEntity> GroupBy(string statements)
+        public DbSet<TEntity> GroupBy(string statements)
         {
             currentCommand += $" GROUP BY {statements} ";
             return this;
         }
-        private DbSet<TEntity> Having(string statements)
+        public DbSet<TEntity> Having(string statements)
         {
             currentCommand += $" HAVING {statements} ";
             return this;
         }
-        private IEnumerable<object> Run()
+        public IEnumerable<object> Run()
         {
             var clone = string.Format(currentCommand, "");
             currentCommand = SqlQuery.selectSQL(table);
             return _dbManager.GetDataTable(clone, CommandType.Text).AsEnumerable();
         }
+        private string removeStar(string input)
+        {
+            return input.Replace('*', ' ');
+        }
+
     }
 }
